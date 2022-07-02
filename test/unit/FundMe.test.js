@@ -2,6 +2,7 @@ const { assert, expect } = require("chai")
 const { network, deployments, ethers } = require("hardhat")
 const { developmentChains } = require("../../helper-hardhat-config")
 
+// Ternary to check whether is a test network via developmentChains (an array of local networks)
 !developmentChains.includes(network.name)
     ? describe.skip
     : describe("FundMe", function () {
@@ -30,14 +31,11 @@ const { developmentChains } = require("../../helper-hardhat-config")
 
           describe("fund", function () {
               // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html
-              // could also do assert.fail
               it("Fails if you don't send enough ETH", async () => {
-                  await expect(fundMe.fund()).to.be.revertedWith(
+                  await expect(fundMe.fund()).to.be.revertedWith( // a matcher
                       "You need to spend more ETH!"
                   )
               })
-              // we could be even more precise here by making sure exactly $50 works
-              // but this is good enough for now
               it("Updates the amount funded data structure", async () => {
                   await fundMe.fund({ value: sendValue })
                   const response = await fundMe.getAddressToAmountFunded(
@@ -64,7 +62,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
 
                   // Act
                   const transactionResponse = await fundMe.withdraw()
-                  const transactionReceipt = await transactionResponse.wait()
+                  const transactionReceipt = await transactionResponse.wait(1) // waits 1 block
                   const { gasUsed, effectiveGasPrice } = transactionReceipt
                   const gasCost = gasUsed.mul(effectiveGasPrice)
 
@@ -75,7 +73,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       await fundMe.provider.getBalance(deployer)
 
                   // Assert
-                  // Maybe clean up to understand the testing
+                  // .add is used as it is a big number
                   assert.equal(endingFundMeBalance, 0)
                   assert.equal(
                       startingFundMeBalance
@@ -103,8 +101,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                   // Act
                   const transactionResponse = await fundMe.cheaperWithdraw()
                   // Let's comapre gas costs :)
-                  // const transactionResponse = await fundMe.withdraw()
-                  const transactionReceipt = await transactionResponse.wait()
+                  const transactionReceipt = await transactionResponse.wait(1) // waits 1 block
                   const { gasUsed, effectiveGasPrice } = transactionReceipt
                   const withdrawGasCost = gasUsed.mul(effectiveGasPrice)
                   console.log(`GasCost: ${withdrawGasCost}`)
