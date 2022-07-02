@@ -9,7 +9,7 @@ async function main() {
     const transactionResponse = await fundMe.fund({
         value: ethers.utils.parseEther("0.1"),
     })
-    await transactionResponse.wait(1)
+    await transactionResponse.wait(1) // Waits 1 block
     console.log("Funded!")
 }
 
