@@ -2,6 +2,7 @@ const { assert } = require("chai")
 const { network, ethers, getNamedAccounts } = require("hardhat")
 const { developmentChains } = require("../../helper-hardhat-config")
 
+// Ternary to check whether it is a local network via developmentChains (array of local networks)
 developmentChains.includes(network.name)
     ? describe.skip
     : describe("FundMe Staging Tests", async function () {
