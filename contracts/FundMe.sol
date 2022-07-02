@@ -23,24 +23,12 @@ contract FundMe {
     mapping(address => uint256) private s_addressToAmountFunded;
     AggregatorV3Interface private s_priceFeed;
 
-    // Events (we have none!)
-
     // Modifiers
     modifier onlyOwner() {
         // require(msg.sender == i_owner);
         if (msg.sender != i_owner) revert FundMe__NotOwner();
         _;
     }
-
-    // Functions Order:
-    //// constructor
-    //// receive
-    //// fallback
-    //// external
-    //// public
-    //// internal
-    //// private
-    //// view / pure
 
     constructor(address priceFeed) {
         s_priceFeed = AggregatorV3Interface(priceFeed);
@@ -73,7 +61,8 @@ contract FundMe {
         (bool success, ) = i_owner.call{value: address(this).balance}("");
         require(success);
     }
-
+    
+    /// Gas optimized
     function cheaperWithdraw() public payable onlyOwner {
         address[] memory funders = s_funders;
         // mappings can't be in memory, sorry!
@@ -102,7 +91,8 @@ contract FundMe {
     {
         return s_addressToAmountFunded[fundingAddress];
     }
-
+    
+    /// Getter functions (for private)
     function getVersion() public view returns (uint256) {
         return s_priceFeed.version();
     }
