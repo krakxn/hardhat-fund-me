@@ -7,7 +7,9 @@ The project comes with basic tests, scripts and mocks, and can be used for crowd
 *The following can be changed or more can be added as per choice via hardhat.config.js*
 
 > Current networks: Rinkeby, Goerli
+>
 > Current currency: USD
+>
 > Current token: ETH
 
 Try running the following to get the complete list of commands available:
