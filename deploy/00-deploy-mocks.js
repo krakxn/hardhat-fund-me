@@ -4,15 +4,15 @@ const {
     DECIMALS,
     INITIAL_ANSWER,
 } = require("../helper-hardhat-config")
-module.exports = async ({ getNamedAccounts, deployments }) => {
+module.exports = async ({ getNamedAccounts, deployments }) => { // { getNamedAccounts, deployments } = hre
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
-    // we need to edploy mocks if we are on a local network
+    // We need to deploy mocks for local networks
     if (chainId == 31337) {
         log("Local network detected! Deploying mocks...")
         await deploy("MockV3Aggregator", {
-            contract: "MockV3Aggregator", // to be really specific
+            contract: "MockV3Aggregator", // To be really specific
             from: deployer,
             log: true,
             args: [DECIMALS, INITIAL_ANSWER],
