@@ -1,12 +1,12 @@
+// Pricefeed addresses can be obtained at: https://docs.chain.link/docs/reference-contracts
+
 const networkConfig = {
-    /*31337: {
+    31337: {
         name: "localhost",
-    },*/
-    // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
-    // Default one is ETH/USD contract on Kovan
+    },
     42: {
         name: "kovan",
-        ethUsdPriceFeed: "0x9326BFA02ADD2366b30bacB125260Af641031331",
+        ethUsdPriceFeed: "0x9326BFA02ADD2366b30bacB125260Af641031331", // Default one is ETH / USD contract on Kovan
     },
     4: {
         name: "rinkeby",
@@ -16,7 +16,7 @@ const networkConfig = {
 
 const developmentChains = ["hardhat", "localhost"]
 const DECIMALS = 8
-const INITIAL_ANSWER = 200000000000 // 11 decimals
+const INITIAL_ANSWER = 200000000000 // 11 zeros
 
 module.exports = {
     networkConfig,
