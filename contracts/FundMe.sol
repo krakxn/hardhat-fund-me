@@ -1,11 +1,12 @@
+/// Conforms to the Solidity style guide, the sorting method used is at the end of program
+/// In addition, follows Chainlink style guide (for storage and immutable variables)
+
 // SPDX-License-Identifier: MIT
-// 1. Pragma
 pragma solidity ^0.8.0;
-// 2. Imports
+
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
-// 3. Interfaces, Libraries, Contracts
 error FundMe__NotOwner();
 
 /**@title A sample Funding Contract
@@ -13,20 +14,17 @@ error FundMe__NotOwner();
  * @dev This implements price feeds as our library
  */
 contract FundMe {
-    // Type Declarations
-    using PriceConverter for uint256;
-
-    // State variables
-    uint256 public constant MINIMUM_USD = 50 * 10**18;
+    using PriceConverter for uint256; /// Attributes defined in PriceConverter can now be used for uint256 variables
+    uint256 public constant MINIMUM_USD = 50 * 10**18; /// 50 * 10^18 -- 1 ETH = 10^18 Wei
     address private immutable i_owner;
     address[] private s_funders;
-    mapping(address => uint256) private s_addressToAmountFunded;
+    mapping(address => uint256) private s_addressToAmountFunded; /// address as key maps to uint256
     AggregatorV3Interface private s_priceFeed;
 
-    // Modifiers
     modifier onlyOwner() {
-        // require(msg.sender == i_owner);
         if (msg.sender != i_owner) revert FundMe__NotOwner();
+        /// Alternative:
+        /// require(msg.sender == i_owner);
         _;
     }
 
@@ -41,7 +39,8 @@ contract FundMe {
             msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
             "You need to spend more ETH!"
         );
-        // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
+        /// Alternative:
+        /// require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
         s_addressToAmountFunded[msg.sender] += msg.value;
         s_funders.push(msg.sender);
     }
@@ -56,16 +55,17 @@ contract FundMe {
             s_addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
-        // Transfer vs call vs Send
-        // payable(msg.sender).transfer(address(this).balance);
+        /// Transfer:
+        /// payable(msg.sender).transfer(address(this).balance);
+        /// Call:
         (bool success, ) = i_owner.call{value: address(this).balance}("");
         require(success);
     }
     
-    /// Gas optimized
+    /// Gas optimized version
     function cheaperWithdraw() public payable onlyOwner {
         address[] memory funders = s_funders;
-        // mappings can't be in memory, sorry!
+        /// Mappings can't be in memory, sorry!
         for (
             uint256 funderIndex = 0;
             funderIndex < funders.length;
@@ -75,7 +75,9 @@ contract FundMe {
             s_addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
-        // payable(msg.sender).transfer(address(this).balance);
+        /// Transfer:
+        /// payable(msg.sender).transfer(address(this).balance);
+        /// Call:
         (bool success, ) = i_owner.call{value: address(this).balance}("");
         require(success);
     }
@@ -92,7 +94,7 @@ contract FundMe {
         return s_addressToAmountFunded[fundingAddress];
     }
     
-    /// Getter functions (for private)
+    /// Getter functions (for private):
     function getVersion() public view returns (uint256) {
         return s_priceFeed.version();
     }
@@ -109,3 +111,11 @@ contract FundMe {
         return s_priceFeed;
     }
 }
+
+/// The sorting pattern:
+/// 1. Pragma
+/// 2. Imports
+/// 3. Interfaces, Libraries, Contracts
+/// Type Declarations
+/// State variables
+/// Modifiers
