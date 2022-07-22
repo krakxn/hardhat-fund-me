@@ -1,5 +1,4 @@
 require("dotenv").config()
-
 require("@nomiclabs/hardhat-etherscan")
 require("@nomiclabs/hardhat-waffle")
 require("hardhat-gas-reporter")
@@ -11,6 +10,7 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 const CMC_API_KEY = process.env.CMC_API_KEY
 const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL
+
 module.exports = {
     // solidity: "0.8.8",
     solidity: {
@@ -31,7 +31,7 @@ module.exports = {
             blockConfirmations: 6,
         },
         hardhat: {
-            // accounts:Thanks Hardhat!,
+            // accounts: Thanks Hardhat!,
             chainId: 31337,
         },
     },
